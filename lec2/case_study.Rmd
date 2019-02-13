@@ -51,7 +51,7 @@ What's the error of this model? Training error is fine.
 
 ```{r}
 resid1 <- crab$n_male - predict(model1)
-error1 <- FILL_THIS_IN
+error1 <- mean(resid1^2)
 ```
 
 How well does this model answer our original question?
@@ -89,15 +89,21 @@ Let's talk about an alternative approach called _Generalized Linear Models_ (GLM
 Fit a GLM. Plot using `ggplot2`, making use of the `method.args` argument of `geom_smooth()`. What's the error?
 
 ```{r}
-model3 <- glm(n_male ~ width, data=crab, FILL_THIS_IN)
+model3 <- glm(n_male ~ width, data=crab, family = poisson)
 ggplot(crab, aes(width, n_male)) +
     geom_point(alpha=0.25) +
     geom_smooth(method="glm", se=FALSE, FILL_THIS_IN)
-resid3 <- crab$n_male - predict(glm, FILL_THIS_IN)
+resid3 <- crab$n_male - predict(model3, type="response")
 (error3 <- mean(resid3^2))
 ```
 
 Bonus: generate some data under the fitted model. How does it compare?
+
+
+Expit interpretation: Increasing the X by one in Odds(Y|X=x) will increase the odds by exp(B1)
+We're making assumptions about the distribution AT Y | X = x (ie Y|X=x ~ Bernoulli())
+Called GLM because you always have the general form B0 + B1x, then apply a link function (and sometimes make assumptions about the distribution) 
+
 
 ## Approach 4: Scientifically motivated model function?
 
