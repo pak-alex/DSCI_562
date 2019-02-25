@@ -38,7 +38,7 @@ head(crab)
 Use the horseshoe crab data again to fit a linear 0.75-quantile regression model. Use the `quantreg::rq()` function.
 
 ```{r}
-crab_rq <- rq(FILL_THIS_IN, data = crab, FILL_THIS_IN)
+crab_rq <- rq(n_male, data = crab, tau = 0.75)
 crab <- crab %>% 
     mutate(q75_rq = predict(crab_rq))
 p_crab +
