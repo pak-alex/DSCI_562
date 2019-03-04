@@ -100,7 +100,7 @@ Obtain the Kaplan-Meier estimate of the survival function using `survival::survf
 
 ```{r}
 (fit_km <- survfit(
-    FILL_THIS_IN ~ 1, 
+    Surv(futime, fustat) ~ 1, 
     data = ovarian
 ))
 ```
@@ -137,6 +137,8 @@ What quantiles do not exist?
 **Mean**
 
 Does the mean exist?
+
+ - No, the survival function does not close off
 
 Obtain the restricted mean using `print.survfit()`, or better, `broom::glance()`. Where is the restriction?
 
@@ -200,7 +202,7 @@ Under the Proportional Hazards model, plot the survival function and obtain a me
 ```{r}
 (fit_ph_survfit <- survfit(
     fit_ph, 
-    newdata = FILL_THIS_IN
+    newdata = ovarian[1, ]
 ))
 ```
 
@@ -216,7 +218,7 @@ fit_ph_survfit %>%
 
 ```{r}
 fit_ph_survfit %>% 
-    FILL_THIS_IN()
+    glance()
 ```
 
 4. Obtain a median estimate using the `quantile` function.
