@@ -201,8 +201,8 @@ Under the Proportional Hazards model, plot the survival function and obtain a me
 
 ```{r}
 (fit_ph_survfit <- survfit(
-    fit_ph, 
-    newdata = ovarian[1, ]
+    fit_ph,
+    newdata = data.frame(rx = 1)#ovarian[1, ]
 ))
 ```
 
@@ -211,7 +211,7 @@ Under the Proportional Hazards model, plot the survival function and obtain a me
     
 ```{r}
 fit_ph_survfit %>% 
-    FILL_THIS_IN()
+    autoplot()
 ```
 
 3. Obtain a mean estimate using a function from the `broom` package.
@@ -227,4 +227,3 @@ fit_ph_survfit %>%
 fit_ph_survfit %>% 
     quantile(probs = 0.5)
 ```
-
