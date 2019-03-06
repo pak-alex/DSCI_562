@@ -24,6 +24,9 @@ dat <- Teams %>%
     mutate(hits = scale(hits),
            walks = scale(walks))
 head(dat)
+
+# Hits and walks are subtracted by mean and divided by sd
+# This is so the iterative estimating procedure for parameters and random effects converges 
 ```
 
 We will investigate how hits and walks affects total number of runs (data are scaled to improve convergence of model-fitting). 
@@ -31,6 +34,7 @@ We will investigate how hits and walks affects total number of runs (data are sc
 Here is a plot on the effect of walks on runs:
 
 ```{r, warning=FALSE, fig.width=10}
+# Walks vs Runs for each individual team
 ggplot(dat, aes(walks, runs)) +
     facet_wrap(~team, ncol=7) +
     geom_point(alpha=0.5) +
@@ -44,7 +48,7 @@ ggplot(dat, aes(walks, runs)) +
 Use a linear model to determine the effect of `hits` and `walks` on `runs`, on an average `team`. Best to allow each team to have its own intercept. Note the standard error on `hits` and `walks`.
 
 ```{r}
-lm(runs ~ FILL_THIS_IN, data = dat) %>% 
+lm(runs ~ walks + hits + team, data = dat) %>% 
     tidy() %>% 
     head()
 ```
@@ -52,7 +56,7 @@ lm(runs ~ FILL_THIS_IN, data = dat) %>%
 How would you determine the effect of `hits` and `walks` _for each individual team_? Note the standard error on `hits` on a representative team.
 
 ```{r}
-lm(runs ~ FILL_THIS_IN, data = dat) %>% 
+lm(runs ~ walks*team + hits*team, data = dat) %>% 
     tidy() %>% 
     filter(str_detect(term, "hits"))
 ```
@@ -68,7 +72,10 @@ Which model yields a smaller SE?
 Fit a mixed effects model with random effects on both `hits` and `walks`. Note the SE's are _in between_ the "pooled" and "separate" linear models.
 
 ```{r}
-fit_lme <- lmer(runs ~  FILL_THIS_IN, data = dat)
+# Note that the std error after fitting LME model is slightly higher than the average model, but dramatically lower than the model that fits every team individually
+
+# Test if estimates are significant using Wald? test? statistic values here are all significant
+fit_lme <- lmer(runs ~  walks + hits + (walks + hits | team), data = dat)
 tidy(fit_lme)
 ```
 
@@ -81,12 +88,15 @@ coef(fit_lme)[[1]]
 Extract the covariance matrix of the fixed effects:
 
 ```{r}
+# Tells us the covariance matrix of the sampling distribution of B1 B2 B3 
+# Note that the B1 B2 and B3 are estimates, which means they have a sampling distribution
 vcov(fit_lme)
 ```
 
 Extract the covariance matrix of the random effects:
 
 ```{r}
+# This is different from above and tells us the covariance matrix of the random effects?? 
 summary(fit_lme)$varcor[[1]]
 ```
 
